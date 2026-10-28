@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Icon from "@/components/Icon";
 import LiveEditor from "@/components/LiveEditor";
 import { linksIn, renderMarkdown, toggleTask } from "@/lib/markdown";
@@ -9,8 +9,8 @@ import { addNote, deleteNote, findNote, folderPath, folderTree, isFolder, noteLi
 
 const SAVE_MS = 400; // typing is saved locally after a short pause; syncing to the server is lazier still
 
-export default function NotePage() {
-  const id = useParams<{ id: string }>().id;
+function NotePage() {
+  const id = useSearchParams().get("id") ?? "";
   const router = useRouter();
   const data = useData();
   const note = data.notes[id];
@@ -60,13 +60,13 @@ export default function NotePage() {
     pending.current = undefined;
     latest.current = null;
     deleteNote(id);
-    router.push(`/notes/folders/${note.folder_id}`);
+    router.push(`/note-folder?id=${note.folder_id}`);
   };
 
   const openNote = (title: string) => {
     flush();
     const hit = findNote(data, title, note.folder_id);
-    router.push(hit ? `/notes/${hit.id}` : `/notes/${addNote(note.folder_id, title)}`);
+    router.push(hit ? `/note?id=${hit.id}` : `/note?id=${addNote(note.folder_id, title)}`);
   };
 
   // Reading view: follow [[links]] (creating missing notes, like Obsidian) and tick checkboxes.
@@ -77,7 +77,7 @@ export default function NotePage() {
       e.preventDefault();
       flush();
       const missing = a.getAttribute("data-missing");
-      router.push(missing ? `/notes/${addNote(note.folder_id, missing)}?edit=1` : a.getAttribute("href")!);
+      router.push(missing ? `/note?id=${addNote(note.folder_id, missing)}&edit=1` : a.getAttribute("href")!);
     } else if (t instanceof HTMLInputElement && t.type === "checkbox") {
       const boxes = [...e.currentTarget.querySelectorAll('input[type="checkbox"]')];
       const body = toggleTask(draft.body, boxes.indexOf(t));
@@ -93,7 +93,7 @@ export default function NotePage() {
   return (
     <div className="max-w-3xl mx-auto w-full flex flex-col gap-space-lg">
       <div className="flex items-center justify-between gap-space-md">
-        <Link href={`/notes/folders/${note.folder_id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors truncate">
+        <Link href={`/note-folder?id=${note.folder_id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors truncate">
           <Icon n="folder" className="text-[14px]" />{folderPath(data, note.folder_id)}
         </Link>
         <div className="flex items-center gap-space-xs shrink-0">
@@ -127,7 +127,7 @@ export default function NotePage() {
         <section className="flex flex-col gap-space-xs border-t border-outline-variant/40 pt-space-md">
           <span className="font-label-sm text-label-sm uppercase tracking-wider text-outline">Linked from</span>
           {backlinks.map((n) => (
-            <Link key={n.id} href={`/notes/${n.id}`} className="flex items-center gap-space-sm font-body-sm text-body-sm text-primary hover:underline">
+            <Link key={n.id} href={`/note?id=${n.id}`} className="flex items-center gap-space-sm font-body-sm text-body-sm text-primary hover:underline">
               <Icon n="description" className="text-[16px] text-outline" />{n.title || "Untitled"}
             </Link>
           ))}
@@ -135,4 +135,9 @@ export default function NotePage() {
       )}
     </div>
   );
+}
+
+// Static export: the id comes from the query string, read inside a Suspense boundary.
+export default function Page() {
+  return <Suspense><NotePage /></Suspense>;
 }

@@ -1,10 +1,11 @@
+import { Suspense } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Sidebar />
+      <Suspense><Sidebar /></Suspense>
       <div className="pl-60 min-h-screen flex flex-col bg-surface">
         <Header />
         <main className="pt-14 flex-1">

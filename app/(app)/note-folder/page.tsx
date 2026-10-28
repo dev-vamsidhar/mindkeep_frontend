@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import Icon from "@/components/Icon";
 import { addFolder, addNote, deleteFolder, isFolder, moveFolder, noteList, parentOf, renameFolder, subFolders, topFolders, useData } from "@/lib/store";
 
@@ -10,8 +10,8 @@ const pill = "flex items-center gap-1 px-space-md py-1.5 border border-outline-v
 const snippet = (body: string) => body.replace(/[#>*_`=\[\]-]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
 const ago = (t: number) => { const d = Math.floor((Date.now() - t) / 86_400_000); return d < 1 ? "today" : d === 1 ? "yesterday" : `${d}d ago`; };
 
-export default function NoteFolderPage() {
-  const id = useParams<{ id: string }>().id;
+function NoteFolderPage() {
+  const id = useSearchParams().get("id") ?? "";
   const router = useRouter();
   const data = useData();
   const [renaming, setRenaming] = useState(false);
@@ -38,7 +38,7 @@ export default function NoteFolderPage() {
     const what = [subs.length && `${subs.length} sub-folder${subs.length === 1 ? "" : "s"}`, `${total} note${total === 1 ? "" : "s"}`].filter(Boolean).join(" and ");
     if (!confirm(`Delete “${folder.name}” and its ${what}?`)) return;
     deleteFolder(id);
-    router.push(parent ? `/notes/folders/${parent.id}` : "/");
+    router.push(parent ? `/note-folder?id=${parent.id}` : "/");
   };
   const createSub = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ export default function NoteFolderPage() {
       <div className="flex items-end justify-between gap-space-md">
         <div className="min-w-0">
           {parent && (
-            <Link href={`/notes/folders/${parent.id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors">
+            <Link href={`/note-folder?id=${parent.id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors">
               <Icon n="arrow_upward" className="text-[14px]" />{parent.name}
             </Link>
           )}
@@ -86,7 +86,7 @@ export default function NoteFolderPage() {
         </div>
         <div className="flex items-center gap-space-sm shrink-0">
           {!parent && <button type="button" onClick={() => setAddingSub(true)} className={pill}><Icon n="create_new_folder" className="text-[18px]" />Sub-folder</button>}
-          <button type="button" onClick={() => router.push(`/notes/${addNote(id)}?edit=1`)} className="flex items-center gap-1 px-space-md py-1.5 bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary rounded-xl font-body-sm text-body-sm font-medium transition-colors">
+          <button type="button" onClick={() => router.push(`/note?id=${addNote(id)}&edit=1`)} className="flex items-center gap-1 px-space-md py-1.5 bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary rounded-xl font-body-sm text-body-sm font-medium transition-colors">
             <Icon n="note_add" className="text-[18px]" />New note
           </button>
         </div>
@@ -95,7 +95,7 @@ export default function NoteFolderPage() {
       {(subs.length > 0 || addingSub) && (
         <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-space-md">
           {subs.map((f) => (
-            <Link key={f.id} href={`/notes/folders/${f.id}`} className="bg-surface-container-low border border-outline-variant/40 hover:border-primary-container/60 rounded-xl px-space-lg py-space-md flex items-center justify-between transition-colors">
+            <Link key={f.id} href={`/note-folder?id=${f.id}`} className="bg-surface-container-low border border-outline-variant/40 hover:border-primary-container/60 rounded-xl px-space-lg py-space-md flex items-center justify-between transition-colors">
               <span className="flex items-center gap-space-sm min-w-0"><Icon n="folder" className="text-[18px] text-outline shrink-0" /><span className="font-medium truncate">{f.name}</span></span>
               <span className="font-label-sm text-label-sm text-on-surface-variant shrink-0">{noteList(data, f.id).length} notes</span>
             </Link>
@@ -115,7 +115,7 @@ export default function NoteFolderPage() {
       ) : (
         <div className="flex flex-col divide-y divide-outline-variant/40 bg-surface-container-lowest border border-outline-variant/40 rounded-xl">
           {notes.map((n) => (
-            <Link key={n.id} href={`/notes/${n.id}`} className="px-space-lg py-space-md flex flex-col gap-0.5 hover:bg-surface-container-low transition-colors first:rounded-t-xl last:rounded-b-xl">
+            <Link key={n.id} href={`/note?id=${n.id}`} className="px-space-lg py-space-md flex flex-col gap-0.5 hover:bg-surface-container-low transition-colors first:rounded-t-xl last:rounded-b-xl">
               <span className="flex items-center justify-between gap-space-md">
                 <span className="font-medium truncate">{n.title || "Untitled"}</span>
                 <span className="font-label-sm text-label-sm text-outline shrink-0">{ago(n.updated_at)}</span>
@@ -127,4 +127,9 @@ export default function NoteFolderPage() {
       )}
     </div>
   );
+}
+
+// Static export: the id comes from the query string, read inside a Suspense boundary.
+export default function Page() {
+  return <Suspense><NoteFolderPage /></Suspense>;
 }

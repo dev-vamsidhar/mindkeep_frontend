@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import CardForm from "@/components/CardForm";
 import Icon from "@/components/Icon";
 import Md from "@/components/Md";
@@ -9,8 +9,8 @@ import { addFolder, cardList, deleteCard, deleteFolder, dueLabel, inQueue, isFol
 
 const btn = "p-1 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors";
 
-export default function FolderPage() {
-  const id = useParams<{ slug: string }>().slug;
+function FolderPage() {
+  const id = useSearchParams().get("id") ?? "";
   const router = useRouter();
   const data = useData();
   const [editing, setEditing] = useState<Card | "new" | null>(null);
@@ -40,7 +40,7 @@ export default function FolderPage() {
     const what = [subs.length && `${subs.length} sub-folder${subs.length === 1 ? "" : "s"}`, `${all.length} card${all.length === 1 ? "" : "s"}`].filter(Boolean).join(" and ");
     if (!confirm(`Delete “${folder.name}” and its ${what}?`)) return;
     deleteFolder(id);
-    router.push(parent ? `/folders/${parent.id}` : "/");
+    router.push(parent ? `/folder?id=${parent.id}` : "/");
   };
   const createSub = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +58,7 @@ export default function FolderPage() {
       <div className="flex items-end justify-between gap-space-md">
         <div className="min-w-0">
           {parent && (
-            <Link href={`/folders/${parent.id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors">
+            <Link href={`/folder?id=${parent.id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors">
               <Icon n="arrow_upward" className="text-[14px]" />{parent.name}
             </Link>
           )}
@@ -109,7 +109,7 @@ export default function FolderPage() {
             const c = cardList(data, f.id);
             const d = c.filter((x) => inQueue(x)).length;
             return (
-              <Link key={f.id} href={`/folders/${f.id}`} className="bg-surface-container-low border border-outline-variant/40 hover:border-primary-container/60 rounded-xl px-space-lg py-space-md flex items-center justify-between transition-colors">
+              <Link key={f.id} href={`/folder?id=${f.id}`} className="bg-surface-container-low border border-outline-variant/40 hover:border-primary-container/60 rounded-xl px-space-lg py-space-md flex items-center justify-between transition-colors">
                 <span className="flex items-center gap-space-sm min-w-0"><Icon n="folder" className="text-[18px] text-outline shrink-0" /><span className="font-medium truncate">{f.name}</span></span>
                 <span className="font-label-sm text-label-sm text-on-surface-variant shrink-0">{c.length} cards{d > 0 && <span className="text-primary"> · {d} due</span>}</span>
               </Link>
@@ -158,4 +158,9 @@ export default function FolderPage() {
       {editing && <CardForm card={editing === "new" ? undefined : editing} folderId={id} onClose={() => setEditing(null)} />}
     </div>
   );
+}
+
+// Static export: the id comes from the query string, read inside a Suspense boundary.
+export default function Page() {
+  return <Suspense><FolderPage /></Suspense>;
 }

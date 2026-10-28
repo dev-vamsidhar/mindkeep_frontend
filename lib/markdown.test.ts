@@ -7,7 +7,7 @@ const resolve = (t: string) => (t.toLowerCase() === "day 1" ? "n1" : undefined);
 test("renders Obsidian syntax", () => {
   const html = renderMarkdown("# Title\n- [ ] todo\n- [x] done\n\nSee [[Day 1]], [[Day 1|yesterday]] and [[Day 2]] #idea ==key== `#nottag`", resolve, (h) => h);
   assert.match(html, /<h1[^>]*>Title<\/h1>/);
-  assert.match(html, /<a href="\/notes\/n1" class="wiki">Day 1<\/a>/);
+  assert.match(html, /<a href="\/note\?id=n1" class="wiki">Day 1<\/a>/);
   assert.match(html, /class="wiki">yesterday</);
   assert.match(html, /class="wiki missing" data-missing="Day 2"/);
   assert.match(html, /<span class="tag">#idea<\/span>/);

@@ -1,0 +1,11 @@
+// Cloudflare Workers static-assets deploy for the static export in `out/` (`npm run build` first).
+// Having this file stops Cloudflare's build from auto-configuring OpenNext, which this app doesn't need.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mindkeep-frontend",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page"
+  }
+}

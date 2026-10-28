@@ -14,9 +14,9 @@ export default function Header() {
   // Notes first (title or text, so "#tag" finds tagged notes), then cards.
   const hits = needle ? [
     ...noteList(data).filter((n) => `${n.title}\n${n.body}`.toLowerCase().includes(needle))
-      .map((n) => ({ id: n.id, href: `/notes/${n.id}`, title: n.title || "Untitled", where: folderPath(data, n.folder_id), icon: "description" })),
+      .map((n) => ({ id: n.id, href: `/note?id=${n.id}`, title: n.title || "Untitled", where: folderPath(data, n.folder_id), icon: "description" })),
     ...cardList(data).filter((c) => `${c.front}\n${c.back}\n${c.tags.join(" ")}`.toLowerCase().includes(needle))
-      .map((c) => ({ id: c.id, href: `/folders/${c.folder_id}#${c.id}`, title: c.front, where: folderPath(data, c.folder_id), icon: "style" })),
+      .map((c) => ({ id: c.id, href: `/folder?id=${c.folder_id}#${c.id}`, title: c.front, where: folderPath(data, c.folder_id), icon: "style" })),
   ].slice(0, 10) : [];
 
   useEffect(() => {

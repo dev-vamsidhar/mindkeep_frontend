@@ -58,7 +58,7 @@ export default function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
             {folders.map((f) => (
-              <Link key={f.id} href={`/folders/${f.id}`} className="bg-surface-container-lowest border border-outline-variant/40 hover:border-primary-container/60 rounded-xl p-space-lg flex items-center justify-between transition-colors">
+              <Link key={f.id} href={`/folder?id=${f.id}`} className="bg-surface-container-lowest border border-outline-variant/40 hover:border-primary-container/60 rounded-xl p-space-lg flex items-center justify-between transition-colors">
                 <span className="flex items-center gap-space-sm">
                   <span className={`w-2.5 h-2.5 rounded-full ${f.dot}`} />
                   <span className="font-medium">{f.name}</span>

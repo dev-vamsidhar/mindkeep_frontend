@@ -17,7 +17,7 @@ const wiki = (resolve: Resolve): TokenizerAndRendererExtension => ({
   },
   renderer(t) {
     const id = resolve(t.target);
-    return id ? `<a href="/notes/${esc(id)}" class="wiki">${esc(t.label)}</a>` : `<a href="#" class="wiki missing" data-missing="${esc(t.target)}">${esc(t.label)}</a>`;
+    return id ? `<a href="/note?id=${esc(id)}" class="wiki">${esc(t.label)}</a>` : `<a href="#" class="wiki missing" data-missing="${esc(t.target)}">${esc(t.label)}</a>`;
   },
 });
 

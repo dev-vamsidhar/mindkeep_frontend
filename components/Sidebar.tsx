@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { addFolder, cardList, noteList, stats, subFolders, topFolders, useData, type Data, type Folder, type Kind, type Note } from "@/lib/store";
 import Icon from "./Icon";
@@ -13,7 +13,9 @@ const row = (on: boolean) =>
 const KEY = "sidebar-collapsed"; // per-device UI preference, so it stays out of sync
 
 export default function Sidebar() {
-  const path = usePathname();
+  const pathname = usePathname();
+  const id = useSearchParams().get("id");
+  const path = id ? `${pathname}?id=${id}` : pathname; // compared against row hrefs to highlight the open item
   const router = useRouter();
   const data = useData();
   const [collapsed, setCollapsed] = useState<string[]>([]); // main folders are expanded by default
@@ -23,7 +25,7 @@ export default function Sidebar() {
     try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
     return next;
   });
-  const inReview = path === "/review-queue" || path === "/review";
+  const inReview = pathname === "/review-queue" || pathname === "/review";
   const due = stats(data).dueToday;
   const nav = [
     { href: "/", icon: "home", label: "Home" },
@@ -36,21 +38,21 @@ export default function Sidebar() {
 
       <nav className="flex flex-col gap-0.5">
         {nav.map((i) => (
-          <Link key={i.href} href={i.href} className={row(i.href === "/" ? path === "/" : inReview)}>
+          <Link key={i.href} href={i.href} className={row(i.href === "/" ? pathname === "/" : inReview)}>
             <span className="flex items-center gap-space-sm"><Icon n={i.icon} className="text-[18px]" />{i.label}</span>
             {i.badge && <span className="font-label-sm text-label-sm text-primary font-semibold">{i.badge}</span>}
           </Link>
         ))}
       </nav>
 
-      <Tree kind="notes" title="Notes" data={data} path={path} collapsed={collapsed} toggle={toggle} onCreate={(id) => router.push(`/notes/folders/${id}`)} />
-      <Tree kind="cards" title="Library" data={data} path={path} collapsed={collapsed} toggle={toggle} onCreate={(id) => router.push(`/folders/${id}`)} />
+      <Tree kind="notes" title="Notes" data={data} path={path} collapsed={collapsed} toggle={toggle} onCreate={(id) => router.push(`/note-folder?id=${id}`)} />
+      <Tree kind="cards" title="Library" data={data} path={path} collapsed={collapsed} toggle={toggle} onCreate={(id) => router.push(`/folder?id=${id}`)} />
       <ProfileMenu />
     </aside>
   );
 }
 
-const folderHref = (kind: Kind, id: string) => (kind === "notes" ? `/notes/folders/${id}` : `/folders/${id}`);
+const folderHref = (kind: Kind, id: string) => (kind === "notes" ? `/note-folder?id=${id}` : `/folder?id=${id}`);
 
 function Chevron({ open, label, onClick }: { open: boolean; label: string; onClick: () => void }) {
   return (
@@ -89,7 +91,7 @@ function Tree({ kind, title, data, path, collapsed, toggle, onCreate }: {
   };
   const noteRows = (f: Folder, indent: string) =>
     notes && noteList(data, f.id).map((n: Note) => (
-      <div key={n.id} className={`flex ${indent}`}><Spacer /><Row href={`/notes/${n.id}`} path={path} icon="description" name={n.title || "Untitled"} /></div>
+      <div key={n.id} className={`flex ${indent}`}><Spacer /><Row href={`/note?id=${n.id}`} path={path} icon="description" name={n.title || "Untitled"} /></div>
     ));
   const folder = (f: Folder, depth: 0 | 1) => {
     const subs = depth === 0 ? subFolders(data, f.id) : [];
