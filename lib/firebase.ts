@@ -2,12 +2,14 @@ import { getApps, initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
 import { useEffect, useState } from "react";
 
-// Values from Firebase console > Project settings > Your apps (web). Put them in .env.local.
+// Firebase web config is public by design (it identifies the project; access is enforced by Firebase Auth
+// and by the API verifying ID tokens), so the project's values are built in and env vars only override them.
+// That way a deploy works even when the build has no .env.local.
 const config = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyAKcP2e8yuP-UBKM11Y5YL56jUfo-flKI8",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "mindkeep-d374f.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "mindkeep-d374f",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:852222205790:web:d6ca291a762cc77ffb39cf",
 };
 
 // Lazy so prerendering on the server never touches Firebase; call it from effects and handlers only.

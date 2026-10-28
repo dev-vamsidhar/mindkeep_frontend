@@ -270,7 +270,7 @@ export function loadSample() {
 // change, plus on reconnect, when the tab is hidden, and a pull every PULL_EVERY while the tab is visible.
 // Conflicts: last write wins by updated_at.
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL || "https://mindkeep-api.vamsubala1.workers.dev"; // .env.local points dev at localhost
 const SYNC_DELAY = 30_000;
 const PULL_EVERY = 10 * 60_000;
 const CHUNK = 500; // the server's per-request row limit
