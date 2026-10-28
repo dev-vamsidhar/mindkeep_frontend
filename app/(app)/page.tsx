@@ -23,9 +23,9 @@ export default function Dashboard() {
     <div className="flex flex-col gap-space-xl">
       <SpaceShortcut to="/review-queue" />
 
-      <section className="flex items-end justify-between gap-space-lg">
+      <section className="flex flex-col sm:flex-row sm:items-end justify-between gap-space-md sm:gap-space-lg">
         <div>
-          <h1 className="font-headline-xl text-headline-xl tracking-tight">{greeting()}{name && <>, <span className="capitalize">{name}</span></>}</h1>
+          <h1 className="font-headline-xl text-[30px] leading-tight font-semibold sm:text-headline-xl tracking-tight">{greeting()}{name && <>, <span className="capitalize">{name}</span></>}</h1>
           <p className="text-on-surface-variant">
             {s.dueToday > 0 ? `${s.dueToday} card${s.dueToday === 1 ? " is" : "s are"} due across ${withDue} folder${withDue === 1 ? "" : "s"}.` : folders.length ? "You're all caught up." : "Create a folder to start adding cards."}
           </p>
@@ -37,10 +37,10 @@ export default function Dashboard() {
         )}
       </section>
 
-      <section className="grid grid-cols-3 gap-space-md">
+      <section className="grid grid-cols-3 gap-space-sm sm:gap-space-md">
         {tiles.map(([n, l]) => (
-          <div key={l} className="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-space-lg">
-            <div className="font-headline-lg text-headline-lg tracking-tight">{n}</div>
+          <div key={l} className="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-space-md sm:p-space-lg">
+            <div className="font-headline-lg text-[24px] font-semibold sm:text-headline-lg tracking-tight">{n}</div>
             <div className="font-label-sm text-label-sm text-on-surface-variant">{l}</div>
           </div>
         ))}
@@ -49,7 +49,7 @@ export default function Dashboard() {
       <section className="flex flex-col gap-space-sm">
         <h2 className="font-headline-sm text-headline-sm">Folders</h2>
         {folders.length === 0 ? (
-          <div className="bg-surface-container-lowest border border-dashed border-outline-variant/60 rounded-xl p-space-xl flex flex-col items-start gap-space-sm">
+          <div className="bg-surface-container-lowest border border-dashed border-outline-variant/60 rounded-xl p-space-lg sm:p-space-xl flex flex-col items-start gap-space-sm">
             <p className="text-on-surface-variant">No folders yet. Use the + next to Library in the sidebar, or start with a sample deck.</p>
             <button type="button" onClick={loadSample} className="px-space-md py-1.5 bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary rounded-xl font-body-sm text-body-sm font-medium transition-colors">
               Add sample cards

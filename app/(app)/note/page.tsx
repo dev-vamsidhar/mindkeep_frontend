@@ -92,7 +92,7 @@ function NotePage() {
 
   return (
     <div className="max-w-3xl mx-auto w-full flex flex-col gap-space-lg">
-      <div className="flex items-center justify-between gap-space-md">
+      <div className="flex flex-wrap items-center justify-between gap-space-sm">
         <Link href={`/note-folder?id=${note.folder_id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors truncate">
           <Icon n="folder" className="text-[14px]" />{folderPath(data, note.folder_id)}
         </Link>
@@ -112,7 +112,7 @@ function NotePage() {
       </div>
 
       <input value={draft.title} onChange={(e) => change({ title: e.target.value })} placeholder="Untitled" maxLength={300} aria-label="Note title"
-        className="font-headline-xl text-headline-xl tracking-tight bg-transparent focus:outline-none placeholder:text-outline" />
+        className="font-headline-xl text-[30px] leading-tight font-semibold sm:text-headline-xl tracking-tight w-full min-w-0 bg-transparent focus:outline-none placeholder:text-outline" />
 
       {editing ? (
         <LiveEditor key={id} value={draft.body} onChange={(body) => change({ body })} resolve={resolve} onOpenNote={openNote}

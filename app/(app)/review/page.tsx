@@ -118,7 +118,7 @@ export default function Review() {
     return (
       <div className="max-w-xl mx-auto w-full flex flex-col items-center gap-space-md text-center pt-space-xl">
         <Icon n="task_alt" className="text-[48px] text-tertiary" />
-        <h1 className="font-headline-lg text-headline-lg tracking-tight">{total ? "Session complete" : "Nothing to review"}</h1>
+        <h1 className="font-headline-lg text-[24px] leading-tight font-semibold sm:text-headline-lg tracking-tight">{total ? "Session complete" : "Nothing to review"}</h1>
         <p className="text-on-surface-variant">{total ? `You reviewed ${total} card${total === 1 ? "" : "s"} in ${mm}:${ss}.` : "No cards match this session."} Your progress is saved on this device and syncs when you’re online.</p>
         <div className="flex gap-space-sm">
           <Link href="/" className="px-space-lg py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-colors">Home</Link>
@@ -134,25 +134,25 @@ export default function Review() {
 
   return (
     <div className="flex flex-col gap-space-lg w-full max-w-4xl mx-auto">
-      <header className="flex items-center justify-between px-space-md py-space-sm bg-surface-container-lowest rounded-xl shadow-sm">
+      <header className="flex flex-wrap items-center justify-between gap-y-space-sm gap-x-space-md px-space-md py-space-sm bg-surface-container-lowest rounded-xl shadow-sm">
         <div className="flex items-center gap-space-md min-w-0">
           <Link href="/review-queue" className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors font-body-sm text-body-sm group">
             <Icon n="arrow_back" className="text-[18px] group-hover:-translate-x-0.5 transition-transform" />
             <span className="font-medium">Exit</span>
-            <kbd className="px-1.5 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-label-sm rounded">Esc</kbd>
+            <kbd className="hidden sm:inline px-1.5 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-label-sm rounded">Esc</kbd>
           </Link>
           <div className="h-4 w-px bg-outline-variant/60" />
           <span className="flex items-center gap-1.5 min-w-0">
             <span className={`w-2 h-2 rounded-full shrink-0 ${folder?.dot ?? "bg-outline"}`} />
-            <span className="font-label-sm text-label-sm text-on-surface-variant truncate max-w-xs">{card && folderPath(data, card.folder_id)}</span>
+            <span className="font-label-sm text-label-sm text-on-surface-variant truncate max-w-[9rem] sm:max-w-xs">{card && folderPath(data, card.folder_id)}</span>
           </span>
         </div>
-        <div className="flex flex-col items-center gap-1">
+        <div className="order-last basis-full sm:order-none sm:basis-auto flex flex-col items-center gap-1">
           <div className="flex items-center gap-2 font-label-sm text-label-sm">
             <span className="font-semibold">Card {pos} of {total}</span>
-            <span className="text-on-surface-variant">({Math.round(((pos - (revealed ? 0 : 1)) / total) * 100)}% completed)</span>
+            <span className="hidden sm:inline text-on-surface-variant">({Math.round(((pos - (revealed ? 0 : 1)) / total) * 100)}% completed)</span>
           </div>
-          <div className="w-36 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+          <div className="w-full sm:w-36 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
             <div className="h-full bg-primary-container rounded-full transition-all duration-300" style={{ width: `${((pos - (revealed ? 0 : 1)) / total) * 100}%` }} />
           </div>
         </div>
@@ -163,7 +163,7 @@ export default function Review() {
           </span>
           <button type="button" onClick={speak} aria-label="Read card aloud" className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"><Icon n="volume_up" className="text-[18px]" /></button>
           <button type="button" onClick={() => setEditing(true)} aria-label="Edit card" className="flex items-center gap-1 px-2 py-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors">
-            <Icon n="edit" className="text-[16px]" /><kbd className="px-1 bg-surface-container text-[10px] font-label-sm rounded">E</kbd>
+            <Icon n="edit" className="text-[16px]" /><kbd className="hidden sm:inline px-1 bg-surface-container text-[10px] font-label-sm rounded">E</kbd>
           </button>
           <div ref={menuRef} className="relative">
             <button type="button" onClick={() => setMenu((v) => !v)} aria-label="More options" aria-expanded={menu} className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors"><Icon n="more_vert" className="text-[18px]" /></button>
@@ -178,7 +178,7 @@ export default function Review() {
       </header>
 
       <div className="flex flex-col items-center">
-        <article className="w-full bg-surface-container-lowest rounded-full p-space-xl shadow-md flex flex-col gap-space-lg">
+        <article className="w-full bg-surface-container-lowest rounded-full p-space-lg sm:p-space-xl shadow-md flex flex-col gap-space-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-space-sm">
               {card.tags[0] && <span className="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold px-2 py-0.5 bg-secondary-container rounded">{card.tags[0]}</span>}
@@ -225,7 +225,7 @@ export default function Review() {
         </article>
 
         <section className="w-full mt-space-lg flex flex-col items-center gap-space-sm">
-          <div className="grid grid-cols-4 gap-space-sm w-full max-w-2xl">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-space-sm w-full max-w-2xl">
             {ratings.map((r) => (
               <button
                 key={r.n}
@@ -238,7 +238,7 @@ export default function Review() {
               >
                 <span className="flex items-center gap-1">
                   <span className={`font-headline-sm text-headline-sm font-semibold ${"text" in r ? r.text : ""}`}>{r.label}</span>
-                  <kbd className={`px-1 text-[10px] font-label-sm rounded ${"primary" in r ? "bg-primary-container/80 text-on-primary-container" : "bg-surface-container text-on-surface-variant"}`}>{"primary" in r ? "3 / Space" : r.n}</kbd>
+                  <kbd className={`hidden sm:inline px-1 text-[10px] font-label-sm rounded ${"primary" in r ? "bg-primary-container/80 text-on-primary-container" : "bg-surface-container text-on-surface-variant"}`}>{"primary" in r ? "3 / Space" : r.n}</kbd>
                 </span>
                 <span className={`font-label-sm text-label-sm mt-0.5 ${"primary" in r ? "opacity-80" : "text-outline"}`}>{interval(nextIn[r.n])}</span>
               </button>
@@ -246,10 +246,10 @@ export default function Review() {
           </div>
           {revealed && (
             <button type="button" onClick={next} className="w-full max-w-2xl py-3 bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary rounded-xl font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-space-sm shadow-md transition-all active:scale-[0.99]">
-              {i + 1 >= total ? "Finish session" : "Next card"}<Icon n="arrow_forward" className="text-[18px]" /><kbd className="px-1.5 py-0.5 bg-on-primary-container/20 rounded text-label-sm font-normal">Space</kbd>
+              {i + 1 >= total ? "Finish session" : "Next card"}<Icon n="arrow_forward" className="text-[18px]" /><kbd className="hidden sm:inline px-1.5 py-0.5 bg-on-primary-container/20 rounded text-label-sm font-normal">Space</kbd>
             </button>
           )}
-          <div className="flex items-center gap-space-md font-label-sm text-label-sm text-outline mt-1">
+          <div className="hidden sm:flex items-center gap-space-md font-label-sm text-label-sm text-outline mt-1">
             <span className="flex items-center gap-1">{[1, 2, 3, 4].map((k) => <kbd key={k} className={kbd}>{k}</kbd>)}<span className="ml-1">rate memory</span></span>
             <span className="text-outline-variant">•</span>
             <span className="flex items-center gap-1"><kbd className={kbd}>S</kbd>star</span>

@@ -104,7 +104,7 @@ export default function ProfileMenu() {
 
       {login && (
         <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-space-lg" onMouseDown={(e) => e.target === e.currentTarget && setLogin(false)}>
-          <form onSubmit={signIn} className="w-full max-w-sm bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-lg p-space-xl flex flex-col gap-space-lg">
+          <form onSubmit={signIn} className="w-full max-w-sm bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-lg p-space-lg sm:p-space-xl flex flex-col gap-space-lg">
             <div>
               <h2 className="font-headline-md text-headline-md tracking-tight">{signup ? "Create your Recall account" : "Log in to Recall"}</h2>
               <p className="font-body-sm text-body-sm text-on-surface-variant">Your cards stay on this device and sync to your account when you’re online.</p>

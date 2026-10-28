@@ -12,7 +12,7 @@ const row = (on: boolean) =>
   }`;
 const KEY = "sidebar-collapsed"; // per-device UI preference, so it stays out of sync
 
-export default function Sidebar() {
+export default function Sidebar({ open }: { open: boolean }) {
   const pathname = usePathname();
   const id = useSearchParams().get("id");
   const path = id ? `${pathname}?id=${id}` : pathname; // compared against row hrefs to highlight the open item
@@ -33,7 +33,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 bg-surface z-50 flex flex-col border-r border-outline-variant/40 px-space-md py-space-lg gap-space-lg overflow-y-auto">
+    <aside className={`fixed left-0 top-0 h-[100dvh] w-64 md:w-60 bg-surface z-50 flex flex-col transition-transform md:translate-x-0 ${open ? "translate-x-0 shadow-xl" : "-translate-x-full"} border-r border-outline-variant/40 px-space-md py-space-lg gap-space-lg overflow-y-auto`}>
       <Link href="/" className="px-space-md font-headline-sm text-headline-sm tracking-tight">Recall</Link>
 
       <nav className="flex flex-col gap-0.5">

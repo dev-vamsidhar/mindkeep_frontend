@@ -5,7 +5,7 @@ import { cardList, folderPath, noteList, useData } from "@/lib/store";
 import Icon from "./Icon";
 import ThemeToggle from "./ThemeToggle";
 
-export default function Header() {
+export default function Header({ onMenu }: { onMenu: () => void }) {
   const data = useData();
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
@@ -26,8 +26,11 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-60 right-0 h-14 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-xl">
-      <div ref={ref} className="relative flex items-center">
+    <header className="fixed top-0 left-0 md:left-60 right-0 h-14 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 z-40 flex items-center justify-between gap-space-sm px-space-md md:px-space-xl">
+      <button type="button" onClick={onMenu} aria-label="Open menu" className="md:hidden -ml-1 p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors">
+        <Icon n="menu" className="text-[22px]" />
+      </button>
+      <div ref={ref} className="relative flex items-center flex-1 min-w-0 md:flex-none">
         <Icon n="search" className="absolute left-3 text-outline text-[18px]" />
         <input
           type="text"
@@ -36,10 +39,10 @@ export default function Header() {
           onFocus={() => setOpen(true)}
           onKeyDown={(e) => e.key === "Escape" && (setOpen(false), e.currentTarget.blur())}
           placeholder="Search notes and cards..."
-          className="w-72 pl-9 pr-3 py-1.5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+          className="w-full md:w-72 pl-9 pr-3 py-1.5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
         />
         {open && needle && (
-          <div className="absolute top-full left-0 mt-1 w-96 bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-lg p-space-xs flex flex-col">
+          <div className="absolute top-full left-0 mt-1 w-[min(24rem,calc(100vw-2rem))] bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-lg p-space-xs flex flex-col">
             {hits.length === 0 ? (
               <span className="px-space-md py-space-sm font-body-sm text-body-sm text-outline">Nothing matches “{q.trim()}”.</span>
             ) : hits.map((h) => (

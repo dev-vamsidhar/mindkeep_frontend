@@ -77,7 +77,7 @@ export default function ReviewQueue() {
             <Icon n="chevron_right" className="text-[14px]" />
             <span className="text-primary-container font-semibold">Review Queue</span>
           </div>
-          <h1 className="font-headline-xl text-headline-xl tracking-tight">Your next review</h1>
+          <h1 className="font-headline-xl text-[30px] leading-tight font-semibold sm:text-headline-xl tracking-tight">Your next review</h1>
           <p className="text-on-surface-variant max-w-xl">Configure your session parameters or jump straight in with optimal algorithmic intervals.</p>
         </div>
         <div className="flex items-center gap-space-sm bg-surface-container-low px-space-md py-space-sm rounded-full self-start md:self-auto shadow-sm">
@@ -91,7 +91,7 @@ export default function ReviewQueue() {
         </div>
       </div>
 
-      <div className="bg-surface-container-lowest rounded-full p-space-xl shadow-sm flex flex-col gap-space-xl">
+      <div className="bg-surface-container-lowest rounded-full p-space-lg sm:p-space-xl shadow-sm flex flex-col gap-space-lg sm:gap-space-xl">
 
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-lg">
           <div className="flex items-baseline gap-space-md">

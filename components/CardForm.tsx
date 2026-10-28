@@ -28,12 +28,12 @@ export default function CardForm({ card, folderId, onClose }: { card?: Card; fol
 
   return (
     <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-space-lg" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <form onSubmit={save} className="w-full max-w-lg bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-lg p-space-xl flex flex-col gap-space-md">
+      <form onSubmit={save} className="w-full max-w-lg bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-lg p-space-lg sm:p-space-xl flex flex-col gap-space-md max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <h2 className="font-headline-md text-headline-md tracking-tight">{card ? "Edit card" : "New card"}</h2>
         <label className={label}>Prompt<textarea name="front" required rows={3} autoFocus defaultValue={card?.front} className={field} /></label>
         <label className={label}>Answer<textarea name="back" required rows={5} defaultValue={card?.back} className={field} /></label>
         <p className="font-label-sm text-label-sm text-outline -mt-1">Supports **bold**, *italic* and `code`.</p>
-        <div className="grid grid-cols-2 gap-space-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
           <label className={label}>Folder
             <select name="folder" defaultValue={card?.folder_id ?? folderId} className={field}>
               {folders.map((f) => <option key={f.id} value={f.id}>{folderPath(data, f.id)}</option>)}

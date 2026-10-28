@@ -53,7 +53,7 @@ function NoteFolderPage() {
 
   return (
     <div className="flex flex-col gap-space-xl">
-      <div className="flex items-end justify-between gap-space-md">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-space-md">
         <div className="min-w-0">
           {parent && (
             <Link href={`/note-folder?id=${parent.id}`} className="flex items-center gap-1 font-label-sm text-label-sm text-outline hover:text-on-surface transition-colors">
@@ -63,10 +63,10 @@ function NoteFolderPage() {
           {renaming ? (
             <form onSubmit={rename}>
               <input name="name" autoFocus defaultValue={folder.name} maxLength={200} onBlur={(e) => e.currentTarget.form?.requestSubmit()} onKeyDown={(e) => e.key === "Escape" && setRenaming(false)}
-                className="font-headline-lg text-headline-lg tracking-tight bg-transparent border-b border-primary-container focus:outline-none w-full" />
+                className="font-headline-lg text-[24px] leading-tight font-semibold sm:text-headline-lg tracking-tight bg-transparent border-b border-primary-container focus:outline-none w-full" />
             </form>
           ) : (
-            <h1 className="font-headline-lg text-headline-lg tracking-tight flex items-center gap-space-sm">
+            <h1 className="font-headline-lg text-[24px] leading-tight font-semibold sm:text-headline-lg tracking-tight flex flex-wrap items-center gap-x-space-sm gap-y-1 break-words">
               {folder.name}
               <button type="button" onClick={() => setRenaming(true)} aria-label="Rename folder" title="Rename" className={btn}><Icon n="edit" className="text-[18px]" /></button>
               {(targets.length > 0 || parent) && (
@@ -84,7 +84,7 @@ function NoteFolderPage() {
           )}
           <p className="font-label-sm text-label-sm text-on-surface-variant">{total} note{total === 1 ? "" : "s"}</p>
         </div>
-        <div className="flex items-center gap-space-sm shrink-0">
+        <div className="flex flex-wrap items-center gap-space-sm shrink-0">
           {!parent && <button type="button" onClick={() => setAddingSub(true)} className={pill}><Icon n="create_new_folder" className="text-[18px]" />Sub-folder</button>}
           <button type="button" onClick={() => router.push(`/note?id=${addNote(id)}&edit=1`)} className="flex items-center gap-1 px-space-md py-1.5 bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary rounded-xl font-body-sm text-body-sm font-medium transition-colors">
             <Icon n="note_add" className="text-[18px]" />New note
